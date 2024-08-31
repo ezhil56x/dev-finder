@@ -5,23 +5,18 @@ import {
   text,
   primaryKey,
   integer,
-} from "drizzle-orm/pg-core"
-import postgres from "postgres"
-import { drizzle } from "drizzle-orm/postgres-js"
-import type { AdapterAccount } from "next-auth/adapters"
- 
-const connectionString = "postgres://postgres:postgres@localhost:5432/drizzle"
-const pool = postgres(connectionString, { max: 1 })
- 
-export const db = drizzle(pool)
+  uuid,
+} from "drizzle-orm/pg-core";
+import postgres from "postgres";
+import { drizzle } from "drizzle-orm/postgres-js";
+import { desc, sql } from "drizzle-orm";
+import type { AdapterAccount } from "next-auth/adapters";
 
+const connectionString = process.env.DATABASE_URL!;
+const pool = postgres(connectionString, { max: 1 });
 
-export const testing = pgTable("testing", {
-  id: text("id").notNull().primaryKey(),
-  name: text("name").notNull(),
-})
+export const db = drizzle(pool);
 
- 
 export const users = pgTable("user", {
   id: text("id")
     .primaryKey()
@@ -30,8 +25,8 @@ export const users = pgTable("user", {
   email: text("email").unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
-})
- 
+});
+
 export const accounts = pgTable(
   "account",
   {
@@ -54,16 +49,16 @@ export const accounts = pgTable(
       columns: [account.provider, account.providerAccountId],
     }),
   })
-)
- 
+);
+
 export const sessions = pgTable("session", {
   sessionToken: text("sessionToken").primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
-})
- 
+});
+
 export const verificationTokens = pgTable(
   "verificationToken",
   {
@@ -97,4 +92,17 @@ export const authenticators = pgTable(
       columns: [authenticator.userId, authenticator.credentialID],
     }),
   })
-)
+);
+
+export const room = pgTable("room", {
+  id: uuid("id").default(sql`gen_random_uuid()`).notNull().primaryKey(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  name: text("name"),
+  description: text("description"),
+  language: text("language"),
+  githubRepo: text("githubRepo"),
+});
+
+export type Room = typeof room.$inferSelect;
