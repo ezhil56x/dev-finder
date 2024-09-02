@@ -9,7 +9,7 @@ import {
 } from "drizzle-orm/pg-core";
 import postgres from "postgres";
 import { drizzle } from "drizzle-orm/postgres-js";
-import { desc, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import type { AdapterAccount } from "next-auth/adapters";
 
 const connectionString = process.env.DATABASE_URL!;
@@ -71,8 +71,8 @@ export const verificationTokens = pgTable(
       columns: [verificationToken.identifier, verificationToken.token],
     }),
   })
-)
- 
+);
+
 export const authenticators = pgTable(
   "authenticator",
   {
@@ -95,13 +95,16 @@ export const authenticators = pgTable(
 );
 
 export const room = pgTable("room", {
-  id: uuid("id").default(sql`gen_random_uuid()`).notNull().primaryKey(),
+  id: uuid("id")
+    .default(sql`gen_random_uuid()`)
+    .notNull()
+    .primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   name: text("name"),
   description: text("description"),
-  language: text("language"),
+  tags: text("tags"),
   githubRepo: text("githubRepo"),
 });
 

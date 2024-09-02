@@ -23,7 +23,7 @@ import { useRouter } from "next/navigation";
 const formSchema = z.object({
   name: z.string().min(2).max(50),
   description: z.string().min(2).max(200),
-  language: z.string().optional(),
+  tags: z.string().optional(),
   githubRepo: z.string().optional(),
 });
 
@@ -35,7 +35,7 @@ export default function CreateRoomForm() {
     defaultValues: {
       name: "",
       description: "",
-      language: "",
+      tags: "",
       githubRepo: "",
     },
   });
@@ -55,7 +55,7 @@ export default function CreateRoomForm() {
             <FormItem>
               <FormLabel>Room</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} placeholder="Dev Finder is Awesome" />
               </FormControl>
               <FormDescription>
                 Enter the name of the room you want to create
@@ -71,7 +71,10 @@ export default function CreateRoomForm() {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input
+                  {...field}
+                  placeholder="I'm working on a side project, come join me"
+                />
               </FormControl>
               <FormDescription>
                 Please describe about your project
@@ -82,15 +85,15 @@ export default function CreateRoomForm() {
         />
         <FormField
           control={form.control}
-          name="language"
+          name="tags"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Language</FormLabel>
+              <FormLabel>Tags</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} placeholder="typescript, nextjs, tailwind" />
               </FormControl>
               <FormDescription>
-                Languages/Technologies used in your project
+                List your programming languages, frameworks, libraries
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -103,7 +106,10 @@ export default function CreateRoomForm() {
             <FormItem>
               <FormLabel>GitHub Repo</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input
+                  {...field}
+                  placeholder="https://github.com/ezhil56x/project"
+                />
               </FormControl>
               <FormDescription>
                 Enter the link to your project&apos;s GitHub repository
