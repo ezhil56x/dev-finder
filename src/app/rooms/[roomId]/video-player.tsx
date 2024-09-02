@@ -22,7 +22,7 @@ export default function DevFinderVideo({ room }: { room: Room }) {
     async function fetchData() {
       try {
         const response = await fetch(
-          process.env.NEXT_PUBLIC_JITSI_SERVER_URL!,
+          process.env.NEXT_PUBLIC_JITSI_FULL_SERVER_URL!,
           { mode: "no-cors" }
         );
         if (response.status === 200) {
@@ -55,7 +55,7 @@ export default function DevFinderVideo({ room }: { room: Room }) {
             email: session.data?.user?.email || "",
           }}
           getIFrameRef={(iframeRef) => {
-            iframeRef.style.height = "700px";
+            iframeRef.style.height = "680px";
           }}
         />
       )}

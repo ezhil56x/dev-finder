@@ -33,8 +33,10 @@ function AccountDropdown() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onClick={() => signOut({ callbackUrl: "/" })}
+        >
           <LogOutIcon size={20} className="mr-2" /> Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>

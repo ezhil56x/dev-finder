@@ -2,10 +2,11 @@ import { getRoom } from "@/data-access/rooms";
 import { GithubIcon } from "lucide-react";
 import Link from "next/link";
 
-import { splitTags, TagsList } from "@/components/tags";
+import { TagsList } from "@/components/tags";
 import DevFinderVideo from "./video-player";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/lib/auth";
+import { splitTags } from "@/lib/utils";
 
 export default async function RoomPage(props: { params: { roomId: string } }) {
   const { roomId } = props.params;
@@ -20,7 +21,7 @@ export default async function RoomPage(props: { params: { roomId: string } }) {
   return (
     <div className="grid grid-cols-4 min-h-screen">
       <div className="col-span-3 p-4 pr-2">
-        <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-4 h-[700px] flex flex-col justify-center align-center text-center">
+        <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-2 h-[700px] flex flex-col justify-center align-center text-center">
           <DevFinderVideo room={room} />
         </div>
       </div>
