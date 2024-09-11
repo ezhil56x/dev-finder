@@ -3,6 +3,7 @@
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useState } from "react";
 
 import {
   DropdownMenu,
@@ -12,35 +13,84 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { LogInIcon, LogOutIcon } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
+import { LogInIcon, LogOutIcon, Trash } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
 import Link from "next/link";
+import { deleteAccountAction } from './actions';
 
 function AccountDropdown() {
   const session = useSession();
+  const [open, setOpen] = useState(false);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant={"link"}>
-          <Avatar className="mr-2">
-            <AvatarImage src={session?.data?.user?.image ?? ""} />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          {session?.data?.user?.name}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem
-          className="cursor-pointer"
-          onClick={() => signOut({ callbackUrl: "/" })}
-        >
-          <LogOutIcon size={20} className="mr-2" /> Sign out
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+    
+    <AlertDialog open={open} onOpenChange={setOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently your account and any data associated with it.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={async () => {
+                  await deleteAccountAction();
+                  setOpen(false);
+                  signOut({ callbackUrl: "/" });
+                }}
+              >
+                Yes, delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant={"link"}>
+            <Avatar className="mr-2">
+              <AvatarImage src={session?.data?.user?.image ?? ""} />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+            {session?.data?.user?.name}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => signOut({ callbackUrl: "/" })}
+            >
+            <LogOutIcon size={20} className="mr-2" /> Sign out
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            <Trash className='mr-2' size={20} /> Delete Account
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   );
 }
 
@@ -49,8 +99,8 @@ export function Header() {
   const isLoggedIn = !!session.data;
 
   return (
-    <header className="py-4 bg-gray-100 dark:bg-gray-900 container mx-auto z-10 relative">
-      <div className="flex justify-between items-center">
+    <header className="bg-gray-100 py-2 dark:bg-gray-900 z-10 relative">
+      <div className="container mx-auto flex justify-between items-center">
         <Link
           href="/"
           className="flex gap-2 items-center text-xl hover:underline"
