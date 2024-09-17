@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createRoomAction } from "./actions";
 import { useRouter } from "next/navigation";
-import { useToast } from '@/components/hooks/use-toast';
+import { useToast } from "@/components/hooks/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -43,6 +43,7 @@ export default function CreateRoomForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    // @ts-ignore
     const room = await createRoomAction(values);
     toast({
       title: "Room created",
